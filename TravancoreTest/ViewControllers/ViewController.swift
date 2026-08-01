@@ -14,7 +14,7 @@ class ViewController: UIViewController,UITableViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.title = "Test Table View"
-        
+        navigationController?.navigationBar.prefersLargeTitles = true
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.register(UINib(nibName: "TestCell", bundle: nil),
