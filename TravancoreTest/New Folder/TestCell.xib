@@ -12,7 +12,7 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TestCell" rowHeight="135" id="KGk-i7-Jjw" customClass="TestCell" customModule="TravancoreTest" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="135"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="TestCell" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM" customClass="TestCell" customModule="TravancoreTest" customModuleProvider="target">
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="TestCell" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="135"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
@@ -71,13 +71,6 @@
                     <constraint firstItem="tYL-Ba-PqB" firstAttribute="top" secondItem="ybl-me-vHb" secondAttribute="bottom" constant="27.666666666666657" id="rVF-67-Haw"/>
                     <constraint firstItem="NjJ-BW-Ect" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="xkN-2A-OXo"/>
                 </constraints>
-                <connections>
-                    <outlet property="profileImage" destination="0pU-ka-OFw" id="idu-iE-ZQd"/>
-                    <outlet property="readUnreadLabel" destination="tYL-Ba-PqB" id="IxZ-Rf-k9B"/>
-                    <outlet property="subtitleLabel" destination="ybl-me-vHb" id="zun-NH-yBO"/>
-                    <outlet property="timeStampLabel" destination="NjJ-BW-Ect" id="OpN-tS-QE0"/>
-                    <outlet property="titleLabel" destination="fxh-Iv-dZF" id="wLR-lS-nOs"/>
-                </connections>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>

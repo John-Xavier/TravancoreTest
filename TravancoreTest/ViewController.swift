@@ -13,10 +13,13 @@ class ViewController: UIViewController,UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        self.title = "Test Table View"
+        
         mainTableView.delegate = self
         mainTableView.dataSource = self
         mainTableView.register(UINib(nibName: "TestCell", bundle: nil),
                                    forCellReuseIdentifier: "TestCell")
+        mainTableView.showsVerticalScrollIndicator = false
     }
 
 }
