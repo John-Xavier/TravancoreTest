@@ -45,6 +45,7 @@ class ViewController: UIViewController,UITableViewDelegate {
     @IBAction func searchButtonAction(_ sender: Any) {
         let vc = sb.instantiateViewController(withIdentifier: "SearchVC") as! SearchVC
         vc.users = self.users
+        vc.usersVc = self
         present(vc, animated: true)
     }
     

@@ -52,8 +52,11 @@ extension SearchVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = AppConfig.storyBoard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
-        usersVc?.navigationController?.pushViewController(vc, animated: true)
+        let nav = usersVc?.navigationController
+        dismiss(animated: true){
+            let vc = AppConfig.storyBoard.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
+            nav?.pushViewController(vc, animated: true)
+        }
         
     }
 }
