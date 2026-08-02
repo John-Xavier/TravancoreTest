@@ -14,13 +14,7 @@ class ProfileTableViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Profile"
     }
-
- 
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-
+    
    
 
 }
