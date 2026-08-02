@@ -13,6 +13,13 @@ class ViewController: UIViewController,UITableViewDelegate {
     @IBOutlet weak var searchLabel: UILabel!
     @IBOutlet weak var searchIconLabel: UILabel!
     
+    private let searchController = UISearchController(searchResultsController: nil)
+    var filteredUsers = [User]()
+
+    private var isSearching: Bool {
+        searchController.isActive && !(searchController.searchBar.text ?? "").isEmpty
+    }
+    
     let sb = UIStoryboard(name: "Main", bundle: nil)
 
     var users = [User]()
@@ -24,6 +31,17 @@ class ViewController: UIViewController,UITableViewDelegate {
         setUpSearch()
         loadUsers()
     }
+    
+    func setUpSearch(){
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search users"
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true   // tucks under the large title, reveals on pull-down
+        definesPresentationContext = true                    // keeps search bar from lingering when you push
+    }
+    
     func setUpTable(){
         mainTableView.delegate = self
         mainTableView.dataSource = self
@@ -31,9 +49,7 @@ class ViewController: UIViewController,UITableViewDelegate {
                                    forCellReuseIdentifier: "TestCell")
         mainTableView.showsVerticalScrollIndicator = false
     }
-    func setUpSearch(){
-        
-    }
+   
     
     func loadUsers(){
         Task{
@@ -53,21 +69,30 @@ class ViewController: UIViewController,UITableViewDelegate {
 
 extension ViewController:UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        isSearching ? filteredUsers.count : users.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TestCell", for: indexPath) as! TestCell
-        cell.titleLabel.text = users[indexPath.row].name
-        cell.subtitleLabel.text = users[indexPath.row].createdAt
-        cell.timeStampLabel.text = "10:00 AM"
-        cell.readUnreadLabel.text = "Read"
+        let user = isSearching ? filteredUsers[indexPath.row] : users[indexPath.row]
+        cell.titleLabel.text = user.name
+        // ...rest as before...
         return cell
-        
     }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = sb.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
-        navigationController?.pushViewController(vc, animated: true)
+        let user = isSearching ? filteredUsers[indexPath.row] : users[indexPath.row]
+        let chat = sb.instantiateViewController(withIdentifier: "ChatViewController") as! ChatViewController
+        // pass user to chat if needed
+        navigationController?.pushViewController(chat, animated: true)
     }
     
+}
+extension ViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let q = (searchController.searchBar.text ?? "")
+            .trimmingCharacters(in: .whitespaces).lowercased()
+        filteredUsers = q.isEmpty ? [] : users.filter { $0.name.lowercased().contains(q) }
+        mainTableView.reloadData()
+    }
 }

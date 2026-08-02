@@ -10,9 +10,11 @@ import UIKit
 class ChatViewController: UIViewController {
     @IBOutlet weak var chatTable: UITableView!
     
+    var user : User?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.title = user?.name ?? ""
         // Do any additional setup after loading the view.
     }
 
