@@ -14,6 +14,9 @@ class SearchVC: UIViewController {
     @IBOutlet weak var searchTextField: UITextField!
     @IBOutlet weak var resultTableView: UITableView!
     
+    @Published private var query:String = ""
+    private var filteredUsers = [User]()
+    private var cancellables = Set<AnyCancellable>()
     var users = [User]()
     var usersVc: ViewController?
     
@@ -24,15 +27,31 @@ class SearchVC: UIViewController {
         resultTableView.dataSource = self
         resultTableView.register(UINib(nibName: "TestCell", bundle: nil),
                                    forCellReuseIdentifier: "TestCell")
+        
+        filteredUsers = users
+        $query
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .removeDuplicates()
+            .map{ [users] text ->[User] in
+                let q = text.trimmingCharacters(in: .whitespaces).lowercased()
+                           guard !q.isEmpty else { return users }
+                           return users.filter { $0.name.lowercased().contains(q)
+                           }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink{ [weak self] results in
+                self?.filteredUsers = results
+                self?.resultTableView.reloadData()
+                
+            }
+            .store(in: &cancellables)
     }
     func searchWith(query: String) {
-//        query.debounce(for: 0.5, scheduler: DispatchQueue.main, options: .none)
-//            .removeDuplicates()
-//            .filter { !$0.isEmpty }
+        
     }
     
     @IBAction func didTypeOnTextField(_ sender: Any) {
-        
+        query = searchTextField.text ?? ""
     }
     
   
@@ -40,13 +59,13 @@ class SearchVC: UIViewController {
 }
 extension SearchVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return users.count
+        return filteredUsers.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TestCell", for: indexPath) as! TestCell
-        cell.titleLabel.text = users[indexPath.row].name
-        cell.subtitleLabel.text = users[indexPath.row].createdAt
+        cell.titleLabel.text = filteredUsers[indexPath.row].name
+        cell.subtitleLabel.text = filteredUsers[indexPath.row].createdAt
         cell.timeStampLabel.text = "10:00 AM"
         cell.readUnreadLabel.text = "Read"
         return cell
